@@ -5,6 +5,14 @@ module RailsLib
 
   def self.after_included
     IRB_PROCS[:setup_personal] = method(:setup_personal) if Object.const_defined?(:IRB_PROCS)
+
+    old_config = ::Hirb.config
+    if ::Hirb::View.enabled?
+      ::Hirb.disable
+      ::Hirb.config_file = 'config/hirb.yml'
+      ::Hirb.config(true)
+    end
+    ::Hirb.enable old_config
   end
 
   def self.setup_personal(*args)
